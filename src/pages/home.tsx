@@ -1,9 +1,12 @@
-import React from 'react'
+// home.tsx
+import React from "react";
 
-export default function Home() {
+const Home = () => {
   return (
-    <div className='bg-black flex-1'>
-      Home
+    <div className="p-8 text-2xl font-semibold text-gray-700">
+      Welcome to Dashboard Home
     </div>
-  )
-}
+  );
+};
+
+export default Home;
