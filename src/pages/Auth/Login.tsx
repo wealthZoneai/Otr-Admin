@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"; // ✅ Import navigation hook
 import loginIllustration from "../../assets/login-vector-img.png";
 
 // ✅ Define the type for form values
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -32,10 +33,7 @@ const LoginPage: React.FC = () => {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         console.log("Submitting", values);
-        await new Promise((res) => setTimeout(res, 600));
-        alert("Signed in (demo) — check console for values");
-        // ✅ Example navigation after successful login
-        // navigate("/dashboard/home");
+        navigate("/dashboard/home");
       } catch (err) {
         console.error(err);
         alert("Sign in failed (demo)");
@@ -46,7 +44,7 @@ const LoginPage: React.FC = () => {
   });
 
   return (
-    <div className="h-[89vh] grid md:grid-cols-2 rounded-3xl overflow-hidden">
+    <div className="h-screen grid md:grid-cols-2 rounded-3xl overflow-hidden">
       {/* Left Side - Login Form */}
       <div className="flex flex-col justify-center items-center px-8 md:px-20 bg-gradient-to-b from-sky-100 to-yellow-200 text-center">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">SIGN IN</h2>
@@ -86,7 +84,7 @@ const LoginPage: React.FC = () => {
               type="email"
               placeholder="Email"
               {...formik.getFieldProps("email")}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 text-center"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
             {formik.touched.email && formik.errors.email && (
               <div className="text-red-500 text-sm mt-1">
@@ -101,7 +99,7 @@ const LoginPage: React.FC = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               {...formik.getFieldProps("password")}
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400 text-center"
+              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400"
             />
             <button
               type="button"
@@ -156,11 +154,11 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Right Side - Illustration */}
-      <div className="hidden md:flex justify-center items-center bg-gradient-to-b from-yellow-300 to-sky-100 h-[89vh]">
+      <div className="hidden md:flex justify-center items-center bg-gradient-to-b from-yellow-300 to-sky-100 h-screen">
         <img
           src={loginIllustration}
           alt="Login Illustration"
-          className="max-h-[95%] object-contain"
+          className="max-h-screen object-contain"
         />
       </div>
     </div>

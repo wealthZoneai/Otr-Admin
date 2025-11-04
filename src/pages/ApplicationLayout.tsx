@@ -3,9 +3,10 @@ import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Home from "./home"; 
 import TopNavBar from "./TopNavBar";
+import JobNotification from "./JobNotifications/JobNotifications";
 
 
-const Notifications = () => <div className="p-8 text-xl">Job Notifications Page</div>; 
+
 const AdmitCard = () => <div className="p-8 text-xl">Admit Card Page</div>;
 const Help = () => <div className="p-8 text-xl">Help & Support Page</div>;
 const Settings = () => <div className="p-8 text-xl">Settings Page</div>;
@@ -26,7 +27,7 @@ const ApplicationLayout: React.FC = () => {
                 <main className="p-6">
                     <Routes>
                         <Route path="home" element={<Home />} />
-                        <Route path="notifications" element={<Notifications />} />
+                        <Route path="notifications" element={<JobNotification/>} />
                         <Route path="admit-card" element={<AdmitCard />} />
                         <Route path="help" element={<Help />} />
                         <Route path="settings" element={<Settings />} />

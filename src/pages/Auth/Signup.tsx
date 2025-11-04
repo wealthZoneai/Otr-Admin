@@ -7,7 +7,7 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaUser,
-  FaLock,FaChevronDown
+  FaLock, FaChevronDown
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import signupIllustration from "../../assets/signup-vector-img.png";
@@ -67,7 +67,7 @@ const SignUpPage: React.FC = () => {
   });
 
   return (
-    <div className="h-[89vh] grid md:grid-cols-2 rounded-3xl overflow-hidden">
+    <div className="h-screen grid md:grid-cols-2 rounded-3xl overflow-hidden">
       {/* Left Section */}
       <div className="flex flex-col bg-gradient-to-b from-sky-100 to-yellow-200 px-8 md:px-20 relative">
         {/* Top Header Section */}
@@ -75,22 +75,22 @@ const SignUpPage: React.FC = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-4">SIGN UP</h2>
           <div className="flex justify-center mb-4">
             <div className="relative w-48">
-                <select
+              <select
                 name="role"
                 value={formik.values.role}
                 onChange={formik.handleChange}
                 className="w-full appearance-none px-3 py-2 pr-10 border border-gray-300 rounded-md bg-[#010E3A] text-white text-center cursor-pointer"
-                >
+              >
                 <option value="Admin">Admin</option>
                 <option value="Customer">Customer</option>
-                </select>
+              </select>
 
-                {/* React Icon — Chevron Down */}
-                <FaChevronDown
+              {/* React Icon — Chevron Down */}
+              <FaChevronDown
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white pointer-events-none text-sm"
-                />
+              />
             </div>
-            </div>
+          </div>
         </div>
 
         {/* Scrollable Input Section */}
@@ -98,7 +98,7 @@ const SignUpPage: React.FC = () => {
           onSubmit={formik.handleSubmit}
           className="flex-1 overflow-y-auto no-scrollbar"
         >
-          <div className="flex flex-col items-center space-y-4 pb-6 h-[295px] overflow-y-auto no-scrollbar">
+          <div className="flex flex-col items-center space-y-4 pb-6 h-[390px] overflow-y-auto no-scrollbar">
             {/* Name */}
             <div className="w-80 relative">
               <FaUser className="absolute left-3 top-3 text-gray-600" />
@@ -213,28 +213,27 @@ const SignUpPage: React.FC = () => {
             </div>
 
             {/* State */}
-            <div className="w-80">
-                <label className="block text-left font-medium text-gray-700 mb-1">
-                    Select State:
-                </label>
+            {/* <div className="w-80">
+              <label className="block text-left font-medium text-gray-700 mb-1">
+                Select State:
+              </label>
 
-                <div className="relative">
-                    <select
-                    {...formik.getFieldProps("state")}
-                    className="w-full h-12 appearance-none px-3 pr-10 border border-gray-400 rounded-md bg-white text-gray-800 cursor-pointer focus:ring-2 focus:ring-teal-400"
-                    >
-                    <option value="">Select</option>
-                    <option value="Andhra Pradesh">Andhra Pradesh</option>
-                    <option value="Odisha">Odisha</option>
-                    <option value="Karnataka">Karnataka</option>
-                    </select>
+              <div className="relative">
+                <select
+                  {...formik.getFieldProps("state")}
+                  className="w-full h-12 appearance-none px-3 pr-10 border border-gray-400 rounded-md bg-white text-gray-800 cursor-pointer focus:ring-2 focus:ring-teal-400"
+                >
+                  <option value="">Select</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Karnataka">Karnataka</option>
+                </select>
 
-                    {/* Chevron Icon */}
-                    <FaChevronDown
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none text-sm"
-                    />
-                </div>
-                </div>
+                <FaChevronDown
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none text-sm"
+                />
+              </div>
+            </div> */}
 
             {/* Agreement */}
             <div className="flex items-center w-80 text-left">
@@ -274,11 +273,11 @@ const SignUpPage: React.FC = () => {
       </div>
 
       {/* Right Section - Illustration */}
-      <div className="hidden md:flex justify-center items-center bg-gradient-to-b from-yellow-300 to-sky-100 h-[89vh]">
+      <div className="hidden md:flex justify-center items-center bg-gradient-to-b from-yellow-300 to-sky-100 h-screen">
         <img
           src={signupIllustration}
           alt="Sign Up Illustration"
-          className="max-h-[95%] object-contain"
+          className="max-h-screen object-contain"
         />
       </div>
     </div>
