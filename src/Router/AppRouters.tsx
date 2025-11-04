@@ -1,40 +1,26 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./isAuthenticated";
-
-
-// const Login = React.lazy(() => import("../pages/Auth/Signin/Login"));
-// const Signup = React.lazy(() => import("../pages/Auth/Signup/Signup"));
-// const DashboardLayout = React.lazy(() => import("../pages/DashboardLayout/DashboardLayout"));
+import ApplicationLayout from "../pages/ApplicationLayout";
 
 const AppRouters = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+    const isAuthenticated = false;
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setIsAuthenticated(!!localStorage.getItem("token"));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+ 
 
-  return (
-    <BrowserRouter>
-      <Suspense>
-        <Routes>
-          {/* <Route
-            path="/"
-            element={
-             <Login />
-            }
-          /> */}
-      
-
-          
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Suspense>
+                <Routes>
+                    <Route
+                        path="/dashboard/*"
+                        element={
+                            <ApplicationLayout />
+                        }
+                    />
+                </Routes>
+            </Suspense>
+        </BrowserRouter>
+    );
 };
 
 export default AppRouters;

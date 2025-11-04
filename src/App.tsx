@@ -1,12 +1,13 @@
-import "react-toastify/dist/ReactToastify.css";
+
 import "./App.css";
+import Sidebar from "./pages/Sidebar";
 import AppRouters from './Router/AppRouters'
 
 
 function App() {
   return (
     <div>
-      <AppRouters />
+      <Sidebar/>
     </div>
   );
  
