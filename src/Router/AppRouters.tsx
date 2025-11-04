@@ -8,10 +8,11 @@ const AppRouters = () => {
       <Suspense >
         <Routes>
           {/* Redirect base dashboard path */}
-          {/* <Route path="/" element={<Navigate to="/dashboard/home" replace />} /> */}
+          <Route path="/" element={<Navigate to="/dashboard/home" replace />} />
           
           {/* Main layout route */}
           <Route path="/dashboard/*" element={<ApplicationLayout />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -1,19 +1,41 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import Home from "./home";
+import Home from "./home"; 
+import TopNavBar from "./TopNavBar";
+
+
+const Notifications = () => <div className="p-8 text-xl">Job Notifications Page</div>; 
+const AdmitCard = () => <div className="p-8 text-xl">Admit Card Page</div>;
+const Help = () => <div className="p-8 text-xl">Help & Support Page</div>;
+const Settings = () => <div className="p-8 text-xl">Settings Page</div>;
 
 const ApplicationLayout: React.FC = () => {
-  return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <div className="flex-1 bg-gray-50 overflow-auto">
-        <Routes>
-          <Route path="home" element={<Home />} />
-        </Routes>
-      </div>
-    </div>
-  );
+    return (
+        <div className="flex h-screen overflow-hidden">
+            
+            {/* 1. Sidebar (Fixed on the left) */}
+            <Sidebar />
+            
+            <div className="flex-1 bg-gray-50 overflow-y-auto"> 
+                
+                <header className="sticky top-0 z-10">
+                    <TopNavBar />
+                </header>
+
+                <main className="p-6">
+                    <Routes>
+                        <Route path="home" element={<Home />} />
+                        <Route path="notifications" element={<Notifications />} />
+                        <Route path="admit-card" element={<AdmitCard />} />
+                        <Route path="help" element={<Help />} />
+                        <Route path="settings" element={<Settings />} />
+                        {/* Add all other routes here */}
+                    </Routes>
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default ApplicationLayout;
