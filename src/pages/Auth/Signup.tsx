@@ -82,7 +82,7 @@ const SignUpPage: React.FC = () => {
                 className="w-full appearance-none px-3 py-2 pr-10 border border-gray-300 rounded-md bg-[#010E3A] text-white text-center cursor-pointer"
               >
                 <option value="Admin">Admin</option>
-                <option value="Customer">Customer</option>
+                <option value="Government Admin">Government Admin</option>
               </select>
 
               {/* React Icon — Chevron Down */}
@@ -137,7 +137,7 @@ const SignUpPage: React.FC = () => {
               />
               <button
                 type="button"
-                className="absolute right-0 top-0 bottom-0 bg-[#010E3A] text-white text-sm px-3 rounded-r-md"
+                className="absolute right-0 top-0 bottom-0 bg-[#010E3A] text-white text-sm px-6 rounded-r-md"
               >
                 Verify
               </button>
@@ -170,7 +170,7 @@ const SignUpPage: React.FC = () => {
               />
               <button
                 type="button"
-                className="absolute right-0 top-0 bottom-0 bg-[#010E3A] text-white text-sm px-3 rounded-r-md"
+                className="absolute right-0 top-0 bottom-0 bg-[#010E3A] text-white text-sm px-6 rounded-r-md"
               >
                 Verify
               </button>
