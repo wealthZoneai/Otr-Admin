@@ -6,6 +6,8 @@ import SignUpPage from "../pages/Auth/Signup";
 import ProtectedRoute from "./isAuthenticated";
 
 const AppRouters = () => {
+
+  
   const isAuthenticated = !!localStorage.getItem("token"); // Example logic
 
   return (
