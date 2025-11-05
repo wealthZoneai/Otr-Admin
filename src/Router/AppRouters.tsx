@@ -20,9 +20,9 @@ const AppRouters = () => {
           <Route
             path="/dashboard/*"
             element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
+              // <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <ApplicationLayout />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           />
 

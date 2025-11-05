@@ -4,10 +4,11 @@ import Sidebar from "./Sidebar";
 import Home from "./home"; 
 import TopNavBar from "./TopNavBar";
 import JobNotification from "./JobNotifications/JobNotifications";
+import AdmitCard from "./AdmitCard/AdmitCard";
 
 
 
-const AdmitCard = () => <div className="p-8 text-xl">Admit Card Page</div>;
+// const AdmitCard = () => <div className="p-8 text-xl">Admit Card Page</div>;
 const Help = () => <div className="p-8 text-xl">Help & Support Page</div>;
 const Settings = () => <div className="p-8 text-xl">Settings Page</div>;
 
