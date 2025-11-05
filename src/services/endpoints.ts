@@ -2,10 +2,13 @@
 
 const endpoints = {
 
- login: 'api/Benjour/auth/login/merchant',
- register: 'api/Benjour/auth/register/merchant',
- Syllabus :'api/syllabus/upload',
-
+    login: 'api/auth/login',
+    register: 'api/auth/register',
+    sendEmailOtp: 'api/auth/send-email-otp',
+    verifyEmailOtp: "api/auth/verify-email-otp",
+    sendMobileOtp: "api/auth/send-mobile-otp",
+    verifyMobileOtp: "api/auth/verify-mobile-otp",
+    Syllabus: 'api/syllabus/upload',
 
 
 }
