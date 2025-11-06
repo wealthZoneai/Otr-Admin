@@ -36,3 +36,8 @@ interface Syllabus {
   mobile: string;
   otp: string;
 }
+
+interface UploadCutoffBody {
+  [key: string]: any;
+}
+

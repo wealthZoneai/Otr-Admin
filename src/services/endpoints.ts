@@ -9,6 +9,11 @@ const endpoints = {
     sendMobileOtp: "api/auth/send-mobile-otp",
     verifyMobileOtp: "api/auth/verify-mobile-otp",
     Syllabus: 'api/syllabus/upload',
+    uploadPQP: 'api/pqp/pqpupload',
+    uploadAnswer: 'api/answerkey/uploadbyAnswer',
+    uploadResult: 'api/result/Resultupload',
+    uploadCutoff: 'api/cutoff/upload',
+    createJobpost: 'jobpost/create',
 
 
 }

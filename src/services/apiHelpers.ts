@@ -7,6 +7,8 @@ export function loginUser({ email, password }: ILoginUserBody) {
   return server.post(endpoints.login, body, { requiresAuth: false });
 }
 
+
+// syllabus
 export function uploadSyllabus({
   jobCategory,
   jobTitle,
@@ -29,6 +31,128 @@ export function uploadSyllabus({
   });
 
 }
+
+// PQP
+
+export function uploadPQP({
+  jobCategory,
+  jobTitle,
+  languages,
+  qualifications,
+  pqp,
+  file,
+}: {
+  jobCategory: string;
+  jobTitle: string;
+  languages: string;
+  qualifications: string;
+  pqp: string;
+  file: File;
+}) {
+  const formData = new FormData();
+  formData.append("jobCategory", jobCategory);
+  formData.append("jobTitle", jobTitle);
+  formData.append("languages", languages);
+  formData.append("qualifications", qualifications);
+  formData.append("pqp", pqp);
+  formData.append("file", file);
+
+  return server.post(endpoints.uploadPQP, formData, { requiresAuth: false });
+}
+
+
+// Answers 
+
+export function uploadAnswer({
+  jobCategory,
+  jobTitle,
+  description,
+  qualifications,
+  websiteUrl,
+  file,
+}: {
+  jobCategory: string;
+  jobTitle: string;
+  description: string;
+  qualifications: string;
+  websiteUrl: string;
+  file: File;
+}) {
+  const formData = new FormData();
+  formData.append("jobCategory", jobCategory);
+  formData.append("jobTitle", jobTitle);
+  formData.append("description", description);
+  formData.append("qualifications", qualifications);
+  formData.append("websiteUrl", websiteUrl);
+  formData.append("file", file);
+
+  return server.post(endpoints.uploadAnswer, formData, {
+    requiresAuth: false,
+  });
+}
+
+// Results
+
+export function uploadResult({
+  jobCategory,
+  jobTitle,
+  releasedDate,
+  websiteUrl,
+  file,
+}: {
+  jobCategory: string;
+  jobTitle: string;
+  releasedDate: string;
+  websiteUrl: string;
+  file: File;
+}) {
+  const formData = new FormData();
+  formData.append("jobCategory", jobCategory);
+  formData.append("jobTitle", jobTitle);
+  formData.append("releasedDate", releasedDate);
+  formData.append("websiteUrl", websiteUrl);
+  formData.append("file", file);
+
+  return server.post(endpoints.uploadResult, formData, {
+   
+    requiresAuth: false,
+  });
+}
+
+
+// cutOff
+
+export function uploadCutoff({
+  jobCategory,
+  jobTitle,
+  releasedDate,
+  file,
+}: UploadCutoffBody) {
+  const formData = new FormData();
+  formData.append("jobCategory", jobCategory);
+  formData.append("jobTitle", jobTitle);
+  formData.append("releasedDate", releasedDate);
+  formData.append("file", file);
+
+  return server.post(endpoints.uploadCutoff, formData, { requiresAuth: false });
+}
+
+// 
+
+export async function CreateJobpost(formData: FormData) {
+  try {
+    const response = await server.post(endpoints.createJobpost, formData, {
+      requiresAuth: false,
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ CreateJobpost error:", error.response?.data || error);
+    throw error;
+  }
+}
+
+
 
 // ✅ REGISTER USER
 export function registerUser({

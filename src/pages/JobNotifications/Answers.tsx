@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { UploadCloud } from "lucide-react";
+import { toast } from "react-toastify";
+import { uploadAnswer } from "../../services/apiHelpers"; // ✅ create this function similar to uploadPQP
 
 const Answer: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,10 @@ const Answer: React.FC = () => {
     websiteUrl: "",
   });
 
+  const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Handle input changes
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -18,14 +24,52 @@ const Answer: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleUpload = () => {
-    alert("Upload button clicked!");
+  // ✅ Handle file selection
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile && selectedFile.type === "application/pdf") {
+      setFile(selectedFile);
+    } else {
+      toast.error("Please upload a valid PDF file");
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ Upload handler
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Answer Form Data:", formData);
-    alert("Form Submitted Successfully ✅");
+
+    if (!file) {
+      toast.error("Please upload the Answer Key file");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await uploadAnswer({
+        jobCategory: formData.jobCategory,
+        jobTitle: formData.jobTitle,
+        description: formData.description,
+        qualifications: formData.qualification,
+        websiteUrl: formData.websiteUrl,
+        file,
+      });
+
+      toast.success("Answer Key uploaded successfully ✅");
+      console.log("Server Response:", response.data);
+      setFormData({
+        jobCategory: "",
+        jobTitle: "",
+        description: "",
+        qualification: "Degree",
+        websiteUrl: "",
+      });
+      setFile(null);
+    } catch (error: any) {
+      console.error("Upload failed:", error);
+      toast.error("Something went wrong while uploading ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,31 +162,34 @@ const Answer: React.FC = () => {
             />
           </div>
 
-          {/* Upload Section */}
+          {/* File Upload */}
           <div className="flex flex-col items-center justify-center border-2 border-dashed border-pink-300 rounded-xl py-6 hover:border-pink-500 transition-all cursor-pointer bg-white/40">
             <label
-              onClick={handleUpload}
+              htmlFor="fileInput"
               className="flex flex-col items-center text-gray-700 cursor-pointer"
             >
               <UploadCloud size={40} className="text-pink-500 mb-2" />
-              <span className="font-semibold">Upload Answer Key (PDF)</span>
+              <span className="font-semibold">
+                {file ? file.name : "Upload Answer Key (PDF)"}
+              </span>
             </label>
+            <input
+              id="fileInput"
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </div>
 
           {/* Buttons */}
           <div className="text-center pt-4 flex justify-center gap-6">
             <button
-              type="button"
-              onClick={handleUpload}
-              className="bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white font-semibold px-8 py-2.5 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-pink-300"
-            >
-              Upload
-            </button>
-            <button
               type="submit"
-              className="bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white font-semibold px-8 py-2.5 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-pink-300"
+              disabled={loading}
+              className="bg-gradient-to-r from-pink-500 to-blue-500 hover:from-pink-600 hover:to-blue-600 text-white font-semibold px-8 py-2.5 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-pink-300 disabled:opacity-70"
             >
-              Submit
+              {loading ? "Uploading..." : "Submit"}
             </button>
           </div>
         </form>
