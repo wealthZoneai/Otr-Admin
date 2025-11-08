@@ -5,12 +5,14 @@ import Home from "./home";
 import TopNavBar from "./TopNavBar";
 import JobNotification from "./JobNotifications/JobNotifications";
 import AdmitCard from "./AdmitCard/AdmitCard";
+import AdminHelpAndSupport from "./HelpAndsupport";
+import AdminSettings from "./Settings";
 
 
 
 // const AdmitCard = () => <div className="p-8 text-xl">Admit Card Page</div>;
-const Help = () => <div className="p-8 text-xl">Help & Support Page</div>;
-const Settings = () => <div className="p-8 text-xl">Settings Page</div>;
+
+// const Settings = () => <div className="p-8 text-xl">Settings Page</div>;
 
 const ApplicationLayout: React.FC = () => {
     return (
@@ -30,8 +32,8 @@ const ApplicationLayout: React.FC = () => {
                         <Route path="home" element={<Home />} />
                         <Route path="notifications" element={<JobNotification/>} />
                         <Route path="admit-card" element={<AdmitCard />} />
-                        <Route path="help" element={<Help />} />
-                        <Route path="settings" element={<Settings />} />
+                        <Route path="help" element={<AdminHelpAndSupport />} />
+                        <Route path="settings" element={<AdminSettings />} />
                         {/* Add all other routes here */}
                     </Routes>
                 </main>
