@@ -7,6 +7,7 @@ import {
   IdCard,
   Headset,
   Settings,
+  ScrollText ,
 } from "lucide-react";
 
 interface MenuItem {
@@ -19,8 +20,10 @@ const menuItems: MenuItem[] = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard/home" },
   { name: "Job Notifications", icon: FileText, path: "/dashboard/notifications" },
   { name: "Admit Card", icon: IdCard, path: "/dashboard/admit-card" },
+   { name: "Exam", icon: ScrollText , path: "/dashboard/Exam" },
   { name: "Help & Support", icon: Headset, path: "/dashboard/help" },
   { name: "Settings", icon: Settings, path: "/dashboard/settings" },
+
 ];
 
 const Sidebar: React.FC = () => {

@@ -153,15 +153,18 @@ const JobNotification: React.FC = () => {
   const removeVacancy = (index: number) =>
     setVacancies(vacancies.filter((_, i) => i !== index));
 
-  const handleVacancyChange = (
-    index: number,
-    field: Exclude<keyof Vacancy, 'religions'>,
-    value: string
-  ) => {
-    const updated = [...vacancies];
-    (updated[index] as any)[field] = value;
-    setVacancies(updated);
-  };
+ const handleVacancyChange = (
+  index: number,
+  field: Exclude<keyof Vacancy, "religions">,
+  value: string
+) => {
+  setVacancies((prevVacancies) =>
+    prevVacancies.map((vacancy, i) =>
+      i === index ? { ...vacancy, [field]: value } : vacancy
+    )
+  );
+};
+
 
   // --- Religion Handlers ---
   const addReligion = (vIndex: number) => {
@@ -282,18 +285,31 @@ const JobNotification: React.FC = () => {
       formData.append("seats", JSON.stringify(v.religions.map((r) => r.seats)));
     });
 
-    try {
-      console.log("📦 Sending FormData payload...");
-      const response = await CreateJobpost(formData);
-      toast.success("Job Created Successfully!");
-      console.log("✅ Response:", response);
-      // Implement form reset here if needed
-    } catch (error: any) {
-      toast.error('Submission failed. Check console for details.');
-      console.error("❌ Submit error:", error.response?.data || error);
-    }
-  };
+   try {
+  console.log("📦 Sending FormData payload...");
+  const response = await CreateJobpost(formData);
+  toast.success("Job Created Successfully!");
+  console.log("✅ Response:", response);
+  // Implement form reset here if needed
+} catch (error: unknown) {
+  toast.error("Submission failed. Check console for details.");
 
+  if (error instanceof Error) {
+    console.error("❌ Submit error:", error.message);
+  } else if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as { response?: { data?: unknown } }).response?.data !== "undefined"
+  ) {
+    console.error("❌ Submit error:", (error as { response?: { data?: unknown } }).response?.data);
+  } else {
+    console.error("❌ Unknown error:", error);
+  }
+}
+
+  };
+ 
   // --- Sub Tab Content ---
   const renderSubTabContent = () => {
     // ... (Your sub-tab rendering logic remains here)

@@ -7,6 +7,7 @@ import JobNotification from "./JobNotifications/JobNotifications";
 import AdmitCard from "./AdmitCard/AdmitCard";
 import AdminHelpAndSupport from "./HelpAndsupport";
 import AdminSettings from "./Settings";
+import AdminExam from "./Exam";
 
 
 
@@ -34,6 +35,9 @@ const ApplicationLayout: React.FC = () => {
                         <Route path="admit-card" element={<AdmitCard />} />
                         <Route path="help" element={<AdminHelpAndSupport />} />
                         <Route path="settings" element={<AdminSettings />} />
+                     <Route path="Exam" element={<AdminExam />} />
+             
+
                         {/* Add all other routes here */}
                     </Routes>
                 </main>

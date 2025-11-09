@@ -35,6 +35,8 @@ const LoginPage: React.FC = () => {
     initialValues: { email: "", password: "", role: "Admin" },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
+          navigate("/dashboard/home");
+
       try {
         const response = await loginUser({
           email: values.email,

@@ -13,13 +13,28 @@ import {
   Clock,
   CheckCircle2,
   AlertTriangle,
-  Search,
   Reply,
   X,
   Send,
 } from "lucide-react";
 
-const tickets = [
+/* ----------------------------- Types ----------------------------- */
+interface Ticket {
+  id: string;
+  user: string;
+  email: string;
+  issue: string;
+  status: "Open" | "Pending" | "Resolved" | "Escalated";
+  createdAt: string;
+}
+
+interface Trend {
+  day: string;
+  tickets: number;
+}
+
+/* ----------------------------- Data ----------------------------- */
+const tickets: Ticket[] = [
   {
     id: "SUP-2024",
     user: "Ravi Kumar",
@@ -54,7 +69,7 @@ const tickets = [
   },
 ];
 
-const trend = [
+const trend: Trend[] = [
   { day: "Mon", tickets: 8 },
   { day: "Tue", tickets: 16 },
   { day: "Wed", tickets: 10 },
@@ -64,10 +79,11 @@ const trend = [
   { day: "Sun", tickets: 9 },
 ];
 
+/* -------------------------- Main Component -------------------------- */
 const AdminHelpAndSupport: React.FC = () => {
-  const [selected, setSelected] = useState<any | null>(null);
-  const [filter, setFilter] = useState("All");
-  const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState<Ticket | null>(null);
+  const [filter, setFilter] = useState<string>("All");
+  const [search, setSearch] = useState<string>("");
 
   const filteredTickets = tickets.filter(
     (t) =>
@@ -227,7 +243,7 @@ const AdminHelpAndSupport: React.FC = () => {
 
 export default AdminHelpAndSupport;
 
-/* -------------------------------- Components -------------------------------- */
+/* -------------------------- Reusable Components -------------------------- */
 
 interface SummaryProps {
   title: string;
@@ -257,7 +273,7 @@ const Summary: React.FC<SummaryProps> = ({ title, value, color, icon }) => {
   );
 };
 
-const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
+const StatusBadge: React.FC<{ status: Ticket["status"] }> = ({ status }) => {
   const styles =
     status === "Open"
       ? "bg-blue-100 text-blue-700"
