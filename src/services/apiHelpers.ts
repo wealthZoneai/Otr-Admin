@@ -199,3 +199,53 @@ export function verifyMobileOtpApi({ mobile, otp }: VerifyMobileOtpBody) {
   const body = { mobile, otp };
   return server.post(endpoints.verifyMobileOtp, body, { requiresAuth: false })
 }
+
+export async function uploadAdmitCard({
+  jobCategoryId,
+}: {
+  jobCategoryId: number;
+ 
+}) {
+  try {
+
+    return server.post(endpoints.adminCard, jobCategoryId, { requiresAuth: false })
+
+  } catch (error: any) {
+    console.error("❌ Error uploading Admit Card:", error);
+    throw error;
+  }
+}
+
+
+// ✅ Get all categories
+export function GetCategories() {
+  return server.get("/api/category/getAll", { requiresAuth: false });
+}
+
+// ✅ Get all questions by category
+export function GetQuestions(category: string) {
+  return server.get(`/api/questions?category=${category}`, { requiresAuth: false });
+}
+
+// ✅ Upload PDF and extract questions
+export function UploadQuestionPDF(formData: FormData) {
+  return server.post("/api/questions/upload-pdf", formData, {
+    requiresAuth: false,
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+}
+
+// ✅ Add a single question manually
+export function CreateQuestionPaper(data: any) {
+  return server.post(endpoints.createQuestionpapers, data, { requiresAuth: false });
+}
+
+// ✅ Delete a specific question
+export function DeleteQuestion(id: string) {
+  return server.delete(`/api/questions/${id}`, { requiresAuth: false });
+}
+
+// ✅ Grade all submissions (optional, for admin)
+export function GradeSubmissions() {
+  return server.post("/api/questions/grade-all", {}, { requiresAuth: false });
+}

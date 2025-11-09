@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/web/pdf_viewer.css";
 import { Plus, Trash2, Zap } from "lucide-react";
+import { CreateQuestionPaper } from "../services/apiHelpers";
 
-// ✅ Fix workerSrc
+// ✅ Worker setup
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
@@ -13,6 +14,7 @@ interface Question {
   options: string[];
   correctAnswer: string;
   setName: string;
+  category: string; // ✅ Added category
 }
 
 interface Submission {
@@ -23,6 +25,7 @@ interface Submission {
   aiFeedback: string;
   isCorrect?: boolean;
   setName: string;
+  category: string; // ✅ Added category
 }
 
 interface QuestionSet {
@@ -32,6 +35,8 @@ interface QuestionSet {
 }
 
 const getRandomId = () => crypto.randomUUID();
+
+const categories = ["SSC", "RRB", "UPSC", "IBPS"]; // ✅ Category list
 
 const AdminExam: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>(() => {
@@ -51,10 +56,8 @@ const AdminExam: React.FC = () => {
     { setName: "D", file: null, questions: [] },
   ]);
 
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error" | "info";
-  } | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>(categories[0]); // ✅ Active category
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
 
   const showToast = (message: string, type: "success" | "error" | "info" = "info") => {
     setToast({ message, type });
@@ -69,10 +72,14 @@ const AdminExam: React.FC = () => {
     localStorage.setItem("exam_submissions", JSON.stringify(submissions));
   }, [submissions]);
 
-  // PDF Upload Handler
+  // ✅ Filter questions by selected category
+  const filteredQuestions = questions.filter((q) => q.category === selectedCategory);
+
+  // 📂 PDF Upload Handler
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, setName: string) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const updatedSets = sets.map((s) => (s.setName === setName ? { ...s, file } : s));
     setSets(updatedSets);
 
@@ -89,6 +96,7 @@ const AdminExam: React.FC = () => {
       fullText += "\n" + text;
     }
 
+    // Regex for extracting questions
     const questionRegex =
       /Q\d+\.\s*(.*?)A\)\s*(.*?)B\)\s*(.*?)C\)\s*(.*?)D\)\s*(.*?)Answer:\s*([A-D])/g;
 
@@ -105,6 +113,7 @@ const AdminExam: React.FC = () => {
         options,
         correctAnswer: options[correctIndex],
         setName,
+        category: selectedCategory, // ✅ Attach category
       });
     }
 
@@ -127,28 +136,80 @@ const AdminExam: React.FC = () => {
     showToast("Question deleted.", "success");
   };
 
-  const handleGradeAll = () => {
-    let graded = 0;
-    const updated = submissions.map((sub) => {
-      if (!sub.isGraded) {
-        const q = questions.find((q) => q.id === sub.questionId && q.setName === sub.setName);
-        if (!q) return sub;
-        graded++;
-        const isCorrect = sub.userAnswer === q.correctAnswer;
-        return {
-          ...sub,
-          isGraded: true,
-          isCorrect,
-          aiFeedback: isCorrect ? "✅ Correct!" : `❌ Incorrect. Correct: ${q.correctAnswer}`,
-        };
-      }
-      return sub;
-    });
-    setSubmissions(updated);
-    showToast(`Graded ${graded} submissions.`, "success");
-  };
 
-  // Question Form Component
+const handleGradeAll = async () => {
+  let graded = 0;
+  const updated = submissions.map((sub) => {
+    if (!sub.isGraded) {
+      const q = questions.find(
+        (q) =>
+          q.id === sub.questionId &&
+          q.setName === sub.setName &&
+          q.category === sub.category
+      );
+      if (!q) return sub;
+      graded++;
+      const isCorrect = sub.userAnswer === q.correctAnswer;
+      return {
+        ...sub,
+        isGraded: true,
+        isCorrect,
+        aiFeedback: isCorrect
+          ? "✅ Correct!"
+          : `❌ Incorrect. Correct: ${q.correctAnswer}`,
+      };
+    }
+    return sub;
+  });
+
+  setSubmissions(updated);
+  showToast(`Graded ${graded} submissions.`, "success");
+
+  // ✅ Build question paper structure for API
+  try {
+    const setsData = ["A", "B", "C", "D"]
+      .map((set) => {
+        const setQuestions = questions.filter((q) => q.setName === set);
+        if (setQuestions.length === 0) return null;
+
+        return {
+          setName: `Set-${set}`,
+          questions: setQuestions.map((q) => ({
+            questionText: q.questionText,
+            optionA: q.options[0] || "",
+            optionB: q.options[1] || "",
+            optionC: q.options[2] || "",
+            optionD: q.options[3] || "",
+            // ✅ Convert answer text back to letter (A/B/C/D)
+            correctAnswer:
+              ["A", "B", "C", "D"][q.options.indexOf(q.correctAnswer)] || "",
+          })),
+        };
+      })
+      .filter(Boolean);
+
+    const paperData = {
+      paperTitle: `${selectedCategory} Technical Test`,
+      description: `This paper includes ${selectedCategory} related core and problem-solving questions.`,
+      sets: setsData,
+    };
+
+    // ✅ Call the API
+    const response = await CreateQuestionPaper(paperData);
+
+    if (response?.status === 200 || response?.status === 201) {
+      showToast("📄 Question paper successfully sent to server!", "success");
+    } else {
+      showToast("⚠️ Failed to create question paper.", "error");
+    }
+  } catch (err) {
+    console.error("Error creating question paper:", err);
+    showToast("🚨 Error while creating question paper.", "error");
+  }
+};
+
+
+  // 🧩 Question Form
   const QuestionForm = () => {
     const [questionText, setQuestionText] = useState("");
     const [options, setOptions] = useState(["", "", "", ""]);
@@ -160,7 +221,15 @@ const AdminExam: React.FC = () => {
         showToast("Fill all fields!", "error");
         return;
       }
-      handleAddQuestion({ questionText, options, correctAnswer, setName });
+
+      handleAddQuestion({
+        questionText,
+        options,
+        correctAnswer,
+        setName,
+        category: selectedCategory, // ✅ Attach current category
+      });
+
       setQuestionText("");
       setOptions(["", "", "", ""]);
       setCorrectAnswer("");
@@ -169,14 +238,16 @@ const AdminExam: React.FC = () => {
     return (
       <div className="bg-white shadow p-4 rounded-lg border border-indigo-200 mb-8">
         <h3 className="font-bold text-indigo-700 mb-3 flex items-center">
-          <Plus className="w-4 h-4 mr-2" /> Add Question
+          <Plus className="w-4 h-4 mr-2" /> Add Question ({selectedCategory})
         </h3>
+
         <textarea
           value={questionText}
           onChange={(e) => setQuestionText(e.target.value)}
           placeholder="Question text"
           className="w-full border p-2 rounded mb-3"
         />
+
         {options.map((opt, i) => (
           <input
             key={i}
@@ -190,6 +261,7 @@ const AdminExam: React.FC = () => {
             className="w-full border p-2 rounded mb-2"
           />
         ))}
+
         <select
           value={correctAnswer}
           onChange={(e) => setCorrectAnswer(e.target.value)}
@@ -198,6 +270,7 @@ const AdminExam: React.FC = () => {
           <option value="">Select Correct Answer</option>
           {options.map((opt, i) => opt && <option key={i} value={opt}>{opt}</option>)}
         </select>
+
         <div className="flex gap-2 mb-3">
           {["A", "B", "C", "D"].map((set) => (
             <button
@@ -211,6 +284,7 @@ const AdminExam: React.FC = () => {
             </button>
           ))}
         </div>
+
         <button
           onClick={addQuestion}
           className="w-full py-2 bg-indigo-600 text-white font-bold rounded hover:bg-indigo-700"
@@ -225,9 +299,25 @@ const AdminExam: React.FC = () => {
     <div className="min-h-screen bg-gray-100 p-4">
       <h1 className="text-2xl font-bold mb-4 text-indigo-800">Admin Exam Panel</h1>
 
-      {/* PDF Upload */}
+      {/* ✅ Category Selection */}
+      <div className="mb-6 flex items-center gap-4 bg-white p-4 rounded-lg shadow">
+        <label className="font-semibold text-gray-700">Select Category:</label>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border p-2 rounded-lg bg-gray-50"
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat.toUpperCase()}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* 📂 Upload PDFs */}
       <div className="bg-white p-4 rounded-lg shadow-md border mb-6">
-        <h2 className="font-bold mb-3">Upload Question PDFs</h2>
+        <h2 className="font-bold mb-3">Upload Question PDFs ({selectedCategory})</h2>
         <div className="grid md:grid-cols-2 gap-6">
           {sets.map((set) => (
             <div key={set.setName}>
@@ -244,17 +334,19 @@ const AdminExam: React.FC = () => {
         </div>
       </div>
 
-      {/* Question Form */}
+      {/* Add Question */}
       <QuestionForm />
 
       {/* Manage Questions */}
       <div className="bg-white shadow p-4 rounded-lg border border-red-200 mb-6">
         <h3 className="font-bold text-red-700 mb-3 flex items-center">
-          <Trash2 className="w-4 h-4 mr-2" /> Manage Questions ({questions.length})
+          <Trash2 className="w-4 h-4 mr-2" /> Manage Questions ({filteredQuestions.length})
         </h3>
-        {questions.map((q) => (
+        {filteredQuestions.map((q) => (
           <div key={q.id} className="flex justify-between items-center border-b py-2">
-            <span>[{q.setName}] {q.questionText}</span>
+            <span>
+              [{q.setName}] {q.questionText}
+            </span>
             <button
               onClick={() => handleDeleteQuestion(q.id)}
               className="text-red-500 hover:text-red-700"
@@ -265,7 +357,7 @@ const AdminExam: React.FC = () => {
         ))}
       </div>
 
-      {/* Submissions */}
+      {/* Grade All */}
       <div className="bg-indigo-50 p-4 rounded-lg flex justify-between items-center">
         <h4 className="font-bold text-indigo-700">Total Submissions: {submissions.length}</h4>
         <button
@@ -276,13 +368,15 @@ const AdminExam: React.FC = () => {
         </button>
       </div>
 
-      {/* Toast Notification */}
+      {/* Toast */}
       {toast && (
         <div
-          className={`fixed top-5 right-5 z-50 px-4 py-2 rounded shadow-lg text-white font-semibold transition-transform duration-300 ${
-            toast.type === "success" ? "bg-green-500" :
-            toast.type === "error" ? "bg-red-500" :
-            "bg-blue-500"
+          className={`fixed top-5 right-5 z-50 px-4 py-2 rounded shadow-lg text-white font-semibold ${
+            toast.type === "success"
+              ? "bg-green-500"
+              : toast.type === "error"
+              ? "bg-red-500"
+              : "bg-blue-500"
           }`}
         >
           {toast.message}
