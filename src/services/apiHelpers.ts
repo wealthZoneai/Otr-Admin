@@ -208,7 +208,7 @@ export async function uploadAdmitCard({
 }) {
   try {
 
-    return server.post(endpoints.adminCard, jobCategoryId, { requiresAuth: false })
+    return server.post(endpoints.adminCard + jobCategoryId, { requiresAuth: false })
 
   } catch (error: any) {
     console.error("❌ Error uploading Admit Card:", error);

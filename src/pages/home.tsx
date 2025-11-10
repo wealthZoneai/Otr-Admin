@@ -148,7 +148,7 @@ const Dashboard: React.FC = () => {
                   `${name} ${(percent * 100).toFixed(0)}%`
                 }
               >
-                {genderData.map((entry, index) => (
+                {genderData.map((_, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]} strokeWidth={2} />
                 ))}
               </Pie>

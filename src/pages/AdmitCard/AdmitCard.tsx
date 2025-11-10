@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { uploadAdmitCard } from "../../services/apiHelpers";
 import { toast } from "react-toastify";
+import type { AxiosError } from "axios";
 
 const categoryMapping: Record<string, number> = {
   ssc: 1,
@@ -154,31 +155,69 @@ const AdmitCard: React.FC = () => {
     
   })
 
-  const handleGenerate = async () => {
-    try {
-      const jobCategoryId = categoryMapping[jobCategory];
+  // const handleGenerate = async () => {
+  //   try {
+  //     const jobCategoryId = categoryMapping[jobCategory];
 
-      const payload = {
-        jobCategoryId,
-        jobTitle,
-        signature: signatureData,
-        pdfFile,
-      };
+  //     const payload = {
+  //       jobCategoryId,
+  //       jobTitle,
+  //       signature: signatureData,
+  //       pdfFile,
+  //     };
 
-      console.log("📤 Sending Admit Card Payload:", payload);
-      const response = await uploadAdmitCard(payload);
+  //     console.log("📤 Sending Admit Card Payload:", payload);
+  //     const response = await uploadAdmitCard(payload);
 
-      if (response.status === 200) {
-        toast.success('✅ Admit Card uploaded successfully!')
-      } else {
-        window.alert("❌ Failed to upload Admit Card!");
-      }
-    } catch (error) {
-      console.error("❌ Error uploading Admit Card:", error);
-    toast.error('✅ Admit Card uploaded successfully!')
+  //     if (response.status === 200) {
+  //       toast.success('✅ Admit Card uploaded successfully!')
+  //     } else {
+  //       window.alert("❌ Failed to upload Admit Card!");
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Error uploading Admit Card:", error);
+  //   toast.error('✅ Admit Card uploaded successfully!')
 
+  //   }
+  // };
+
+const handleGenerate = async () => {
+  try {
+    const jobCategoryId = categoryMapping[jobCategory];
+
+    const payload = {
+      jobCategoryId,
+      jobTitle,
+      signature: signatureData,
+      pdfFile,
+    };
+
+    console.log("📤 Sending Admit Card Payload:", payload);
+
+    const response = await uploadAdmitCard(payload);
+
+    // ✅ Success
+    if (response.status === 200) {
+      toast.success("✅ Admit Card uploaded successfully!");
+      console.log("✅ Response Data:", response.data);
+    } else {
+      const errorMessage = response?.data?.message || "❌ Failed to upload Admit Card!";
+      toast.error(errorMessage);
     }
-  };
+
+  } catch (err: unknown) {
+    // ✅ Tell TS this is an AxiosError
+    const error = err as AxiosError<{ message?: string }>;
+
+    console.error("❌ Error uploading Admit Card:", error);
+
+    const backendMessage = error.response?.data?.message;
+    const message = backendMessage || "Something went wrong while uploading the Admit Card.";
+
+    toast.error(`❌ ${message}`);
+  }
+};
+
 
   return (
     <div className="flex flex-col items-center p-6 bg-gray-100 min-h-full">

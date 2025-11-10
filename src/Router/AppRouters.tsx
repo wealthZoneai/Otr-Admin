@@ -3,12 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ApplicationLayout from "../pages/ApplicationLayout";
 import LoginPage from "../pages/Auth/Login";
 import SignUpPage from "../pages/Auth/Signup";
-import ProtectedRoute from "./isAuthenticated";
 
 const AppRouters = () => {
 
   
-  const isAuthenticated = !!localStorage.getItem("token"); // Example logic
 
   return (
     <BrowserRouter>

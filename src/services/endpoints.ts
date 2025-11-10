@@ -14,7 +14,7 @@ const endpoints = {
     uploadResult: 'api/result/Resultupload',
     uploadCutoff: 'api/cutoff/upload',
     createJobpost: 'jobpost/create',
-    adminCard: 'api/admit-card/generate-by-job?jobPostId=1',
+    adminCard: 'api/admit-card/generate-by-job?jobPostId=',
 
     // 
     createQuestionpapers:'api/question-paper/create?jobPostId=1'
